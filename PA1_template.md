@@ -19,7 +19,7 @@
       activity$Date <- ymd(activity$date)
 ```
 
-<p style = "color: steelblue; font-size: 12pt">  Let's look at the mean total number of steps taken per day.  The histogram shows the distribution of total steps across all days.  The mean and median of the daily totals is calculated. </p>
+<p style = "color: steelblue; font-size: 12pt">  Let's look at the mean total number of steps taken per day.  The histogram shows the distribution of total steps across all days.  The mean and median of the daily totals are calculated. </p>
 
 
 ```r
@@ -47,6 +47,7 @@
       dailySteps <- activity %>%
             group_by(Date) %>% 
             summarise(totalSteps = sum(steps)) 
+
       hist(dailySteps$totalSteps, main= "Daily Step Frequency Oct-Nov 2012", xlab="Total Steps", col="steelblue")
 ```
 
@@ -55,6 +56,7 @@
 ```r
       mean <- mean(dailySteps$totalSteps, na.rm=TRUE)
       median <- median(dailySteps$totalSteps, na.rm=TRUE)
+      
       cat("The mean is ", mean, "\n", sep="")
 ```
 
@@ -73,16 +75,19 @@
 
 
 ```r
-       intervalSteps <- activity %>%
+      intervalSteps <- activity %>%
             group_by(interval) %>% 
             summarise(avgSteps = mean(steps, na.rm=TRUE)) 
-      plot(intervalSteps$interval, intervalSteps$avgSteps, type="l", main="Mean Number of Steps at Daily 5 Minute Intervals", xlab="Interval Number", ylab = "Average Step Count", col="steelblue")
+
+      plot(intervalSteps$interval, intervalSteps$avgSteps, type="l", main="Mean Number of Steps at Daily 5 Minute Intervals", 
+           xlab ="Interval Number", ylab = "Average Step Count", col="steelblue")
 ```
 
 ![](PA1_template_files/figure-html/dailyactivitypattern-1.png) 
 
 ```r
       maxInterval <- subset(intervalSteps,(grepl(max(intervalSteps$avgSteps),intervalSteps$avgSteps)))
+
       cat("The Interval with the highest step count is ", maxInterval[1,1], "\n", sep="")
 ```
 
@@ -91,7 +96,7 @@
 ```
 <p style = "color: steelblue; font-size: 12pt"> Next we'll explore missing values (NA) by taking a count of observations that do not have a step count reported.  Then we'll replace all missing values with the mean value calculated for the interval across all days.</p>  
 
-<p style = "color: blue; font-size: 12pt"> The histogram showing the distribution of total steps across all days is displayed again with the imputed missing values. Mean and median for total daily steps are calculated once more with the new dataset. </p>  
+<p style = "color: steelblue; font-size: 12pt"> The histogram showing the distribution of total steps across all days is displayed again with the imputed missing values. Mean and median for total daily steps are calculated once more with the new dataset. </p>  
 
 
 ```r
@@ -126,6 +131,7 @@
 ```r
                   mean <- mean(dailySteps2$totalSteps, na.rm=TRUE)
                   median <- median(dailySteps2$totalSteps, na.rm=TRUE)
+
                   cat("The mean with imputed values is ", mean, "\n", sep="")
 ```
 
@@ -148,6 +154,7 @@
       library(ggplot2)
       
       activity2$dayOfWeek <- ifelse(((wday(activity2$Date) == 1) | (wday(activity2$Date) == 7)), "weekend", "weekday")
+
       intervalSteps2 <- activity2 %>%
             group_by(dayOfWeek, interval) %>% 
             summarise(Steps = mean(steps, na.rm=TRUE))       
@@ -156,3 +163,4 @@
 ```
 
 ![](PA1_template_files/figure-html/weekdayvsweekend-1.png) 
+
